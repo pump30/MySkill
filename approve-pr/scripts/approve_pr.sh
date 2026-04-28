@@ -10,13 +10,14 @@ if [[ -z "${APPROVE_PR_TOKEN:-}" ]]; then
   exit 1
 fi
 export GH_TOKEN="$APPROVE_PR_TOKEN"
+export GH_ENTERPRISE_TOKEN="$APPROVE_PR_TOKEN"
 
 # If no PR URL provided, list PRs requesting review from current user
 if [[ -z "$PR_URL" ]]; then
   echo "🔍 Searching for PRs requesting your review on $GH_HOST..."
   echo ""
 
-  PRS=$(gh search prs --review-requested=@me --state=open --hostname "$GH_HOST" --json url,title,author,repository --limit 20 2>/dev/null || true)
+  PRS=$(GH_HOST="$GH_HOST" gh search prs --review-requested=@me --state=open --json url,title,author,repository --limit 20 2>/dev/null || true)
 
   if [[ -z "$PRS" || "$PRS" == "[]" ]]; then
     echo "No open PRs requesting your review."
@@ -54,7 +55,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 # Fetch PR details
-PR_JSON=$(gh pr view "$PR_NUM" --repo "$REPO" --hostname "$GH_HOST" --json title,author,additions,deletions,changedFiles,baseRefName,headRefName,body 2>&1)
+PR_JSON=$(gh pr view "$PR_URL" --json title,author,additions,deletions,changedFiles,baseRefName,headRefName 2>&1)
 
 TITLE=$(echo "$PR_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['title'])")
 AUTHOR=$(echo "$PR_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['author']['login'])")
@@ -72,12 +73,14 @@ echo ""
 
 # Show changed files
 echo "📁 Changed files:"
-gh pr diff "$PR_NUM" --repo "$REPO" --hostname "$GH_HOST" --name-only 2>/dev/null | sed 's/^/  /'
+gh pr diff "$PR_URL" --name-only 2>/dev/null | sed 's/^/  /'
 echo ""
 
-# Approve
-echo "✅ Approving PR #$PR_NUM..."
-gh pr review "$PR_NUM" --repo "$REPO" --hostname "$GH_HOST" --approve --body "LGTM 👍"
-
-echo ""
-echo "✅ PR #$PR_NUM approved successfully."
+# Output PR metadata for the caller
+echo "PR_TITLE=$TITLE"
+echo "PR_AUTHOR=$AUTHOR"
+echo "PR_URL=$PR_URL"
+echo "PR_NUM=$PR_NUM"
+echo "PR_REPO=$REPO"
+echo "PR_BRANCH=$HEAD → $BASE"
+echo "PR_CHANGES=$CHANGED files (+$ADDS / -$DELS)"
