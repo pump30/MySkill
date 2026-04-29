@@ -51,13 +51,36 @@ Approve open PRs on SAP GitHub Enterprise (`github.wdf.sap.corp`) that are reque
 https://www.xiaoyuzhoufm.com/episode/<episode_id>
 ```
 
+### [send-email](./send-email/)
+
+通过 Gmail SMTP 发送邮件通知，支持 HTTP 代理（适配国内网络环境）。
+
+**Features:**
+- Gmail SMTP (SSL 465) 发送邮件
+- HTTP CONNECT 代理支持（解决国内 Gmail 连接问题）
+- 默认收件人可配置，也支持自定义收件人
+- 纯 Python 实现，无额外依赖
+
+**Setup:**
+
+1. Copy the `send-email` folder to `~/.claude/skills/send-email/`
+2. Edit `scripts/send.py` to configure your SMTP credentials and proxy
+
+**Usage:**
+
+```
+/send-email                          # Claude will ask for subject and body
+发邮件 主题xxx 内容xxx               # Natural language trigger
+```
+
 ## Installation
 
 ```bash
 # Clone this repo
-git clone https://github.wdf.sap.corp/I572881/MySkill.git
+git clone https://github.com/pump30/MySkill.git
 
 # Symlink a skill into Claude Code
 ln -s "$(pwd)/MySkill/approve-pr" ~/.claude/skills/approve-pr
 ln -s "$(pwd)/MySkill/xiaoyuzhou-podcast" ~/.claude/skills/xiaoyuzhou-podcast
+ln -s "$(pwd)/MySkill/send-email" ~/.claude/skills/send-email
 ```
