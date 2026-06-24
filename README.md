@@ -51,6 +51,28 @@ Approve open PRs on SAP GitHub Enterprise (`github.wdf.sap.corp`) that are reque
 https://www.xiaoyuzhoufm.com/episode/<episode_id>
 ```
 
+### [nas-calendar](./nas-calendar/)
+
+在自建 Radicale (CalDAV) 服务器上增删改日程，支持全天事件和带时间事件。
+
+**Features:**
+- 通过原始 HTTP/curl 操作 CalDAV，无需 Python 依赖
+- 全天事件 / 带时间事件 / 批量排班
+- 稳定的 UID 设计：同一 UID 再 PUT 即更新，避免重复事件
+- 凭据/服务器地址从本地配置文件读取（不进 git）
+
+**Setup:**
+
+1. Copy the `nas-calendar` folder to `~/.claude/skills/nas-calendar/`
+2. Copy `nas-calendar/config.example.json` to `~/.config/nas-calendar/config.json` and fill in your CalDAV server URL / username / password / calendar path
+
+**Usage:**
+
+```
+加一个日程 明天下午2点开会               # Natural language trigger
+把这张排班表加到日历                     # Send a screenshot + this prompt
+```
+
 ### [send-email](./send-email/)
 
 通过 Gmail SMTP 发送邮件通知，支持 HTTP 代理（适配国内网络环境）。
@@ -83,4 +105,5 @@ git clone https://github.com/pump30/MySkill.git
 ln -s "$(pwd)/MySkill/approve-pr" ~/.claude/skills/approve-pr
 ln -s "$(pwd)/MySkill/xiaoyuzhou-podcast" ~/.claude/skills/xiaoyuzhou-podcast
 ln -s "$(pwd)/MySkill/send-email" ~/.claude/skills/send-email
+ln -s "$(pwd)/MySkill/nas-calendar" ~/.claude/skills/nas-calendar
 ```

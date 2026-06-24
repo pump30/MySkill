@@ -1,0 +1,7 @@
+{
+  "base_url": "https://dav.example.com",
+  "username": "user@example.com",
+  "password": "REPLACE_ME",
+  "calendar_path": "/user@example.com/00000000-0000-0000-0000-000000000000/",
+  "proxy": "http://127.0.0.1:7897"
+}
